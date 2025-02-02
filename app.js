@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const { initDB } = require('./database');
+
+initDB();
 
 // Logger Middleware
 const logger = function (req, res, next) {
