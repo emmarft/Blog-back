@@ -21,16 +21,19 @@ const User = sequelize.define('User', {
 const Category = sequelize.define('Category', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
+    description: { type: DataTypes.STRING, allowNull: true },
     created_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW }
 }, { timestamps: false });
 
 const Article = sequelize.define('Article', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    title: { type: DataTypes.STRING, allowNull: false },
+    title: { type: DataTypes.STRING, allowNull: false, unique: true },
     content: { type: DataTypes.TEXT, allowNull: false },
-    image_url: { type: DataTypes.STRING },
+    image_url: { type: DataTypes.STRING, allowNull: true },
+    category_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: Category, key: 'id' } },
     created_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW }
+    updated_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
+    user_id: { type: DataTypes.INTEGER, allowNull: false },
 }, { timestamps: false });
 
 const Comment = sequelize.define('Comment', {
@@ -62,6 +65,11 @@ Comment.belongsTo(User, { foreignKey: 'user_id' });
 
 Article.hasMany(Comment, { foreignKey: 'article_id', onDelete: 'CASCADE' });
 Comment.belongsTo(Article, { foreignKey: 'article_id' });
+
+// Définir la relation entre Article et Category
+Article.belongsTo(Category, { foreignKey: 'category_id' });
+Category.hasMany(Article, { foreignKey: 'category_id' });
+
 
 User.belongsToMany(Article, { through: Like, foreignKey: 'user_id' });
 Article.belongsToMany(User, { through: Like, foreignKey: 'article_id' });
