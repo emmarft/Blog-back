@@ -47,9 +47,9 @@ describe('Tests pour les articles', () => {
 
     // Test pour récupérer un article par ID
     it('devrait récupérer un article par ID', async () => {
-        const response = await request(app).get('/article/34');
+        const response = await request(app).get('/article/37');
         expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('id', 34);
+        expect(response.body).toHaveProperty('id', 37);
     });
 
     it('devrait mettre à jour un article', async () => {
@@ -58,13 +58,13 @@ describe('Tests pour les articles', () => {
             content: 'Updated content'
         };
 
-        const response = await request(app).put('/articles/34').send(updateArticle);
+        const response = await request(app).put('/articles/37').send(updateArticle);
         expect(response.status).toBe(200);
         expect(response.body.title).toBe('Updated Title');
     });
 
     it('devrait supprimer un article', async () => {
-        const response = await request(app).delete('/articles/34');
+        const response = await request(app).delete('/articles/37');
         expect(response.status).toBe(200);
         expect(response.text).toBe('Article supprimé avec succès');
     });
