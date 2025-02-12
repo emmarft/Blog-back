@@ -60,7 +60,7 @@ describe('Tests pour les articles', () => {
     });
 
     it('devrait supprimer un article', async () => {
-        const response = await request(app).delete(`/articles/${createdArticleId}`); // Utiliser l'ID stocké
+        const response = await request(app).delete(`/articles/${createdArticleId}`);
         expect(response.status).toBe(200);
         expect(response.text).toBe('Article supprimé avec succès');
     });

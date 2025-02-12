@@ -1,24 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { } = require('../database');
+const { postContact } = require('../controllers/ContactController');
 
 
 // 1️⃣ Formulaire de contact
-router.post('/contact', async (req, res) => {
-    try {
-        const { name, email, message } = req.body;
-        if (!name || !email || !message) return res.status(400).send('Tous les champs sont requis');
-
-        console.log(`Nouveau message de contact: ${name} - ${email}: ${message}`);
-        res.status(200).send('Message envoyé');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Erreur lors de l’envoi du message');
-    }
-});
+router.post('/contact', postContact);
 
 // 2️⃣ Soumission de bons plans
-router.post('/bons-plans', async (req, res) => {
+/*router.post('/bons-plans', async (req, res) => {
     try {
         const { user_id, title, description } = req.body;
         if (!title || !description) return res.status(400).send('Le titre et la description sont requis');
@@ -29,6 +19,6 @@ router.post('/bons-plans', async (req, res) => {
         console.error(error);
         res.status(500).send('Erreur lors de la soumission du bon plan');
     }
-});
+});*/
 
 module.exports = router;
