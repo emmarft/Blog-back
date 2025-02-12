@@ -13,4 +13,3 @@ test('Home displays 3 recent articles', () => {
   
     expect(window.location.pathname).toBe('/articles');
   });
-  
