@@ -7,9 +7,9 @@ router.post('/articles/:id/commentaires', async (req, res) => {
     try {
         const { user_id, content } = req.body;
         const articleId = req.params.id;
-        
+
         if (!content) return res.status(400).send('Le commentaire ne peut pas être vide');
-        
+
         const newComment = await Comment.create({ article_id: articleId, user_id, content });
         res.status(201).json(newComment);
     } catch (error) {
@@ -63,7 +63,7 @@ router.post('/articles/:id/like', async (req, res) => {
     try {
         const article = await Article.findByPk(req.params.id);
         if (!article) return res.status(404).send('Article non trouvé');
-        
+
         article.likes += 1;
         await article.save();
         res.json(article);

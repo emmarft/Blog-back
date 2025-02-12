@@ -46,7 +46,7 @@ router.get('/categories/:id', async (req, res) => {
 // 3️⃣ Route pour créer une nouvelle catégorie
 router.post('/categories', async (req, res) => {
     try {
-        const {name} = req.body;
+        const { name } = req.body;
         if (!name) {
             return res.status(400).send("Le nom de la catégorie est obligatoire");
         }

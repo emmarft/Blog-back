@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { Article, Comment, User } = require('../database');
 
+const JWT_SECRET = 'mon_super_code_super_secret';
 
 // 1️⃣ Récupérer les statistiques
 router.get('/admin/statistiques', async (req, res) => {
@@ -16,6 +18,42 @@ router.get('/admin/statistiques', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Erreur lors de la récupération des statistiques');
+    }
+});
+
+// 3️⃣ Connexion de l'utilisateur (authentification)
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email et mot de passe sont requis." });
+    }
+
+    try {
+        // Vérifier si l'utilisateur existe
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect." });
+        }
+
+        // Comparer le mot de passe
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect." });
+        }
+
+        // Générer un token JWT
+        const token = jwt.sign(
+            { userId: user.id, email: user.email, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '1h' } // Le token expirera dans 1 heure
+        );
+
+        // Retourner le token au client
+        res.json({ message: "Authentification réussie", token });
+    } catch (error) {
+        console.error("Erreur lors de la connexion :", error);
+        res.status(500).json({ message: "Erreur serveur." });
     }
 });
 
@@ -49,7 +87,7 @@ router.post('/register', async (req, res) => {
             username: name,
             email,
             password: hashedPassword,
-            role: role || 'reader' 
+            role: role || 'reader'
         });
 
         res.status(201).json({ message: "Utilisateur créé avec succès.", user: newUser });

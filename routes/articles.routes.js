@@ -2,73 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { isAdmin } = require('../middleware/auth');
 const { Article, Category } = require('../database');
+const { getArticles, showArticle, postArticles } = require('../controllers/ArticleController');
 
 
 /// 1️⃣ Route pour récupérer tous les articles
-// Importation des modèles
-
-
-router.get('/articles', async (req, res) => {
-    try {
-      const articles = await Article.findAll({
-        include: [
-          {
-            model: Category,
-            attributes: ['id', 'name'], // Inclure id et name
-          },
-        ],
-      });
-  
-      res.json(articles);
-    } catch (error) {
-      // ...
-    }
-  });
-
+router.get('/articles', getArticles);
 
 // 2️⃣ Route pour récupérer un article par ID
-router.get('/article/:id', async (req, res) => {
-    const articleId = req.params.id;
-    try {
-        const article = await Article.findByPk(articleId);
-        if (article) {
-            res.json(article);
-        } else {
-            res.status(404).send('Article non trouvé');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération de l'article");
-    }
-});
-
+router.get('/article/:id', showArticle);
 
 // 3️⃣ Route pour créer un nouvel article
-
-
-router.post('/articles', isAdmin, async (req, res) => {
-    try {
-        const { title, content, image_url, category_id, user_id } = req.body;
-
-        if (!title || !content) {
-            return res.status(400).send("Le titre et le contenu sont obligatoires");
-        }
-        // Vérifier si un article avec le même titre existe déjà
-        const existingArticle = await Article.findOne({ where: { title } });
-        if (existingArticle) {
-            return res.status(400).json({ message: "Cet article existe déjà." });
-        }
-
-        // Créer l'article uniquement s'il n'existe pas
-        const newArticle = await Article.create({ title, content, image_url, category_id, user_id });
-        res.status(201).json(newArticle);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la création de l'article");
-    }
-});
-
-
+router.post('/articles', isAdmin, postArticles);
 
 // 4️⃣ Route pour mettre à jour un article
 router.put('/articles/:id', async (req, res) => {

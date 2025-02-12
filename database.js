@@ -35,7 +35,7 @@ const Article = sequelize.define('Article', {
     updated_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
     user_id: { type: DataTypes.INTEGER, allowNull: false },
 }, { timestamps: false });
-
+  
 const Comment = sequelize.define('Comment', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     content: { type: DataTypes.TEXT, allowNull: false },
@@ -69,7 +69,6 @@ Comment.belongsTo(Article, { foreignKey: 'article_id' });
 // Définir la relation entre Article et Category
 Article.belongsTo(Category, { foreignKey: 'category_id' });
 Category.hasMany(Article, { foreignKey: 'category_id' });
-
 
 User.belongsToMany(Article, { through: Like, foreignKey: 'user_id' });
 Article.belongsToMany(User, { through: Like, foreignKey: 'article_id' });
