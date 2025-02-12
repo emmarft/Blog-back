@@ -16,14 +16,14 @@ const usersRoutes = require('./routes/users.routes');
 
 app.use("/", articlesRoutes, categoriesRoutes, commentairesRoutes, contactRoutes, usersRoutes);
 
-// Configuration du serveur
+// Export de l'application sans écoute directe
+module.exports = app;
+
+// Si nécessaire, démarrez le serveur (optionnel, utilisé hors tests)
 if (require.main === module) {
-    // Ce bloc ne s'exécutera que si ce fichier est exécuté directement (pas en tant que module importé)
     const hostname = '127.0.0.1';
     const port = process.env.PORT || 3000;
     app.listen(port, hostname, () => {
         console.log(`Serveur démarré sur http://${hostname}:${port}`);
     });
 }
-
-module.exports = app;  // Exporte l'application pour les tests
