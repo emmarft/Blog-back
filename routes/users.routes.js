@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { Article, Comment, User } = require('../database');
 const { getStatistics, postLogin, getUsers, postRegister, putUsers, deleteUsers } = require('../controllers/UserController');
-const { deleteComment } = require('../controllers/CommentController');
 
 // 1️⃣ Récupérer les statistiques
 router.get('/admin/statistiques', getStatistics);

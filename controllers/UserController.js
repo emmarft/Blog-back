@@ -1,5 +1,7 @@
 const { Article, Comment, User} = require('../database');
-const JWT_SECRET = 'mon_super_code_super_secret';
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 const getStatistics = async (req, res) => {
     try {
@@ -39,7 +41,7 @@ const postLogin = async (req, res) => {
         const token = jwt.sign(
             { userId: user.id, email: user.email, role: user.role },
             JWT_SECRET,
-            { expiresIn: '1h' } // Le token expirera dans 1 heure
+            { expiresIn: '1h' }
         );
 
         // Retourner le token au client
@@ -87,6 +89,7 @@ const postRegister = async (req, res) => {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ message: "Erreur serveur." });
     }
+    
 };
 
 const putUsers = async (req, res) => {
