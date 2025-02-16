@@ -45,6 +45,7 @@ const postArticles = async (req, res) => {
             console.log("Données manquantes :", { title, content });
             return res.status(400).send("Le titre et le contenu sont obligatoires");
         }
+        
         // Vérifier si un article avec le même titre existe déjà
         const existingArticle = await Article.findOne({ where: { title } });
         if (existingArticle) {

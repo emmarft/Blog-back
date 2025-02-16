@@ -1,4 +1,4 @@
-const { Article, Comment, User} = require('../database');
+const { Article, Comment, User } = require('../database');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -34,13 +34,13 @@ const postLogin = async (req, res) => {
         // Comparer le mot de passe
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: "Email ou mot de passe incorrect." });
+            return res.status(401).json({ message: "Email ou mot de passe blabla." });
         }
 
         // Générer un token JWT
         const token = jwt.sign(
             { userId: user.id, email: user.email, role: user.role },
-            JWT_SECRET,
+            "JWT_SECRET",
             { expiresIn: '1h' }
         );
 
@@ -89,7 +89,7 @@ const postRegister = async (req, res) => {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ message: "Erreur serveur." });
     }
-    
+
 };
 
 const putUsers = async (req, res) => {
@@ -114,7 +114,7 @@ const deleteUsers = async (req, res) => {
     }
 };
 
-module.exports = { 
+module.exports = {
     getStatistics,
     postLogin,
     getUsers,

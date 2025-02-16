@@ -4,7 +4,7 @@ const path = require('path');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: path.join(__dirname, 'database.sqlite'),
-    logging: false // Désactive les logs SQL dans la console
+    logging: false
 });
 
 // Définition des modèles Sequelize
@@ -28,7 +28,8 @@ const Category = sequelize.define('Category', {
 const Article = sequelize.define('Article', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     title: { type: DataTypes.STRING, allowNull: false, unique: true },
-    content: { type: DataTypes.TEXT, allowNull: false },
+    resume: { type: DataTypes.STRING, allowNull: false},
+    content: { type: DataTypes.TEXT('long'), allowNull: false },
     image_url: { type: DataTypes.STRING, allowNull: true },
     category_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: Category, key: 'id' } },
     created_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
@@ -66,7 +67,6 @@ Comment.belongsTo(User, { foreignKey: 'user_id' });
 Article.hasMany(Comment, { foreignKey: 'article_id', onDelete: 'CASCADE' });
 Comment.belongsTo(Article, { foreignKey: 'article_id' });
 
-// Définir la relation entre Article et Category
 Article.belongsTo(Category, { foreignKey: 'category_id' });
 Category.hasMany(Article, { foreignKey: 'category_id' });
 
@@ -76,7 +76,7 @@ Article.belongsToMany(User, { through: Like, foreignKey: 'article_id' });
 // Synchronisation de la base de données
 const initDB = async () => {
     try {
-        await sequelize.sync({ force: false }); // Force à false pour ne pas supprimer les données existantes
+        await sequelize.sync({ force: false });
         console.log('Base de données synchronisée');
     } catch (error) {
         console.error('Erreur lors de la synchronisation de la base de données:', error);
