@@ -1,21 +1,20 @@
-# Utilise une image de base Node.js
-FROM node:20.18.0
+# Utiliser l'image de base Node.js
+FROM node:20
 
-# Définit le répertoire de travail dans le conteneur
-WORKDIR /app
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /usr/src/app
 
-# Copie le fichier package.json et package-lock.json
-# Cela permet d'installer les dépendances avant de copier tout le code (pour améliorer la mise en cache)
+# Copier les fichiers package.json et package-lock.json dans le conteneur
 COPY package*.json ./
 
-# Installe les dépendances
+# Installer les dépendances
 RUN npm install
 
-# Copie le reste du code de ton application
+# Copier le reste des fichiers du projet dans le conteneur
 COPY . .
 
-# Expose le port sur lequel l'application va tourner (par défaut 3000 pour Express)
+# Exposer le port que ton application utilise
 EXPOSE 3000
 
-# Lance l'application Express
-CMD ["npm", "start"]
+# Démarrer l'application avec nodemon
+CMD ["npx", "nodemon", "app.js"]
