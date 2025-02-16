@@ -22,7 +22,7 @@ module.exports = app;
 
 // Si nécessaire, démarrez le serveur (optionnel, utilisé hors tests)
 if (require.main === module) {
-    const hostname = '127.0.0.1';
+    const hostname = '0.0.0.0';
     const port = process.env.PORT || 3000;
     app.listen(port, hostname, () => {
         console.log(`Serveur démarré sur http://${hostname}:${port}`);
