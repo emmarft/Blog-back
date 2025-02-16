@@ -18,18 +18,18 @@ const seedDatabase = async () => {
 
         // 2. Création des catégories
         const categories = await Category.bulkCreate([
-            { name: "Beauté", description: "Destinations et astuces de voyage" },
-            { name: "Voyage", description: "Conseils et tendances beauté" },
-            { name: "Lifestyle", description: "Art de vivre et quotidien" },
-            { name: "Nutrition", description: "Alimentation et bien-être" },
-            { name: "Mode", description: "Tendances et conseils mode" },
-            { name: "Bien-être", description: "Santé et développement personnel" },
-            { name: "Décoration", description: "Design d'intérieur et DIY" },
-            { name: "Culture", description: "Livres, films et arts" },
-            { name: "Créativité", description: "Projets créatifs et inspiration" },
-            { name: "Finance", description: "Gestion de budget et astuces financières" },
-            { name: "Sport & Fitness", description: "Entraînements et conseils sportifs" }
-        ]);
+            { id: 1, name: "Beauté", description: "Destinations et astuces de voyage" },
+            { id: 2, name: "Voyage", description: "Conseils et tendances beauté" },
+            { id: 3, name: "Lifestyle", description: "Art de vivre et quotidien" },
+            { id: 4, name: "Nutrition", description: "Alimentation et bien-être" },
+            { id: 5, name: "Mode", description: "Tendances et conseils mode" },
+            { id: 6, name: "Bien-être", description: "Santé et développement personnel" },
+            { id: 7, name: "Décoration", description: "Design d'intérieur et DIY" },
+            { id: 8, name: "Culture", description: "Livres, films et arts" },
+            { id: 9, name: "Créativité", description: "Projets créatifs et inspiration" },
+            { id: 10, name: "Finance", description: "Gestion de budget et astuces financières" },
+            { id: 11, name: "Sport & Fitness", description: "Entraînements et conseils sportifs" }
+          ]);          
 
         // 3. Création des articles
         const articles = await Article.bulkCreate([
@@ -62,7 +62,7 @@ const seedDatabase = async () => {
                 resume: "Découvrez les meilleures astuces naturelles pour une peau rayonnante et en bonne santé.",
                 content: "Découvrez les meilleures astuces naturelles pour une peau rayonnante et en bonne santé.",
                 image_url: "https://i.pinimg.com/736x/e5/2d/88/e52d88554c22b8c8fade93beabb7282d.jpg",
-                category_id: categories[1].id,
+                category_id: categories[6].id,
                 user_id: users[1].id
             },
             {
