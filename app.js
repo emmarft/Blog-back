@@ -11,7 +11,7 @@ app.use(express.json());
 
 // CORS : Autoriser le front-end sur le port 3001
 const corsOptions = {
-    origin: 'http://192.168.1.103:3001',  // Permet uniquement les requêtes venant du front-end sur ce port
+    origin: 'http://82.66.147.237:3001',  // Permet uniquement les requêtes venant du front-end sur ce port
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Si tu veux restreindre les méthodes autorisées
 };
 
