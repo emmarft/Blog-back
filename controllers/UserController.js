@@ -64,7 +64,7 @@ const getUsers = async (req, res) => {
 
 const postRegister = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ message: "Nom, email et mot de passe sont requis." });
@@ -75,13 +75,22 @@ const postRegister = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déjà utilisé." });
         }
 
+        // Vérifier s'il existe déjà un administrateur
+        const adminCount = await User.count({ where: { role: 'admin' } });
+        let role = 'reader'; // Rôle par défaut
+
+        if (adminCount === 0) {
+            // Si c'est le premier utilisateur, il devient admin
+            role = 'admin';
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await User.create({
             username: name,
             email,
             password: hashedPassword,
-            role: role || 'reader'
+            role: role
         });
 
         res.status(201).json({ message: "Utilisateur créé avec succès.", user: newUser });
@@ -89,7 +98,6 @@ const postRegister = async (req, res) => {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ message: "Erreur serveur." });
     }
-
 };
 
 const putUsers = async (req, res) => {
