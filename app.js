@@ -7,15 +7,27 @@ const { initDB } = require('./database');
 initDB();
 
 // Middleware pour le traitement des requêtes JSON
-app.use(express.json()); 
+app.use(express.json());
 
-// CORS : Autoriser le front-end sur le port 3001
+// CORS : Autoriser plusieurs origines
+const allowedOrigins = [
+    'http://82.66.147.237',       // IP publique
+    'http://192.168.1.103',       // IP locale
+    'http://localhost:3001'       // Pour les tests locaux
+];
+
 const corsOptions = {
-    origin: 'http://192.168.1.103:3001',  // Permet uniquement les requêtes venant du front-end sur ce port
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Si tu veux restreindre les méthodes autorisées
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
 };
 
-app.use(cors(corsOptions));  // Applique CORS avec les options définies
+app.use(cors(corsOptions));
 
 // Importation des routes
 const articlesRoutes = require('./routes/articles.routes');
@@ -27,10 +39,10 @@ const usersRoutes = require('./routes/users.routes');
 // Utilisation des routes
 app.use("/", articlesRoutes, categoriesRoutes, commentairesRoutes, contactRoutes, usersRoutes);
 
-// Export de l'application sans écoute directe
+// Export de l'application
 module.exports = app;
 
-// Si nécessaire, démarre le serveur (optionnel, utilisé hors tests)
+// Démarrer le serveur si ce fichier est exécuté directement
 if (require.main === module) {
     const hostname = '0.0.0.0';
     const port = process.env.PORT || 3000;
