@@ -64,10 +64,9 @@ const getUsers = async (req, res) => {
 
 const postRegister = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: "Nom, email et mot de passe sont requis." });
+        const { email, password, name } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email et mot de passe sont requis." });
         }
 
         const existingUser = await User.findOne({ where: { email } });
@@ -75,25 +74,32 @@ const postRegister = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déjà utilisé." });
         }
 
-        // Vérifier s'il existe déjà un administrateur
         const adminCount = await User.count({ where: { role: 'admin' } });
-        let role = 'reader'; // Rôle par défaut
-
-        if (adminCount === 0) {
-            // Si c'est le premier utilisateur, il devient admin
-            role = 'admin';
-        }
+        let role = adminCount === 0 ? 'admin' : 'reader';
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await User.create({
-            username: name,
+            username: name || email,  // Utilise l'email si le name est absent
             email,
             password: hashedPassword,
-            role: role
+            role
         });
 
-        res.status(201).json({ message: "Utilisateur créé avec succès.", user: newUser });
+        // 🟢 **Générer le token pour l'utilisateur inscrit**
+        const token = jwt.sign(
+            { userId: newUser.id, email: newUser.email, role: newUser.role },
+            "JWT_SECRET",
+            { expiresIn: '1h' }
+        );
+
+        // 🟢 **Envoyer le token au frontend**
+        res.status(201).json({
+            message: "Utilisateur créé avec succès.",
+            user: newUser,
+            token  // ✅ Ajout du token dans la réponse
+        });
+
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ message: "Erreur serveur." });

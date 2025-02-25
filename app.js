@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+require('dotenv').config();
+console.log("CORS_ORIGINS:", process.env.CORS_ORIGINS);
+
+
 // DB
 const { initDB } = require('./database');
 initDB();
@@ -9,22 +13,13 @@ initDB();
 // Middleware pour le traitement des requêtes JSON
 app.use(express.json());
 
-// CORS : Autoriser plusieurs origines
-const allowedOrigins = [
-    'http://82.66.147.237',       // IP publique
-    'http://192.168.1.103',       // IP locale
-    'http://localhost:3001'       // Pour les tests locaux
-];
 
+// CORS : Autoriser plusieurs origines
 const corsOptions = {
-    origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    origin: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
@@ -46,7 +41,7 @@ module.exports = app;
 if (require.main === module) {
     const hostname = '0.0.0.0';
     const port = process.env.PORT || 3000;
-    app.listen(port, hostname, () => {
-        console.log(`Serveur démarré sur http://${hostname}:${port}`);
+    app.listen(port, () => {
+        console.log(`Serveur démarré sur le port ${port}`);
     });
 }
